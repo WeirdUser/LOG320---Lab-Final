@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LOG320---Lab-Final:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/LOG320___Lab_Final_jar</output-path>
+    <root id="archive" name="LOG320---Lab-Final.jar">
+      <element id="module-output" name="LOG320---Lab-Final" />
+    </root>
+  </artifact>
+</component>

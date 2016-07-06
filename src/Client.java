@@ -13,10 +13,10 @@ class Client {
 	BufferedOutputStream output;
     String[][] board = new String[8][8];
 	try {
-		MyClient = new Socket("10.196.122.188", 8888);
+		MyClient = new Socket("142.137.79.19", 8888);
 	   	input    = new BufferedInputStream(MyClient.getInputStream());
 		output   = new BufferedOutputStream(MyClient.getOutputStream());
-		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));  
+		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 	   	while(1 == 1){
 			char cmd = 0;
 		   	

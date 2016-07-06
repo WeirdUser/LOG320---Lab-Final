@@ -37,7 +37,7 @@ public class AlphaBetaAlgo {
 
         // pass in all the possible moves(boards) (up to a selected level of precision. here: 3)
         for (PossibleBoard item : boards.nextBoards) {
-            int boardPriority = determineMovePriority();
+            int boardPriority = determineMovePriority(item);
             if(boardPriority > highestPriority){
                 highestPriority = boardPriority;
                 bestBoard = item.currentBoard;
@@ -68,7 +68,7 @@ public class AlphaBetaAlgo {
 
     }
 
-    private int determineMovePriority(){
+    private int determineMovePriority(PossibleBoard item){
         //TODO: calculate the priority level of the movement depending on a lot of differents points
         //TODO: to take into consideration. * this is your part Marc-Olivier
 
