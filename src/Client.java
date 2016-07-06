@@ -4,11 +4,14 @@ import java.net.*;
 
 class Client {
 	public static void main(String[] args) {
+
+        AlphaBetaAlgo AB = new AlphaBetaAlgo();
+        String joueur = "2";
          
 	Socket MyClient;
 	BufferedInputStream input;
 	BufferedOutputStream output;
-    int[][] board = new int[8][8];
+    String[][] board = new String[8][8];
 	try {
 		MyClient = new Socket("10.196.122.188", 8888);
 	   	input    = new BufferedInputStream(MyClient.getInputStream());
@@ -18,6 +21,13 @@ class Client {
 			char cmd = 0;
 		   	
             cmd = (char)input.read();
+
+            if(cmd == '1'){
+                joueur = "4";
+            }
+            else if(cmd =='2'){
+                joueur = "2";
+            }
             		
             // Début de la partie en joueur blanc
             if(cmd == '1'){
@@ -32,7 +42,7 @@ class Client {
                 boardValues = s.split(" ");
                 int x=0,y=0;
                 for(int i=0; i<boardValues.length;i++){
-                    board[x][y] = Integer.parseInt(boardValues[i]);
+                    board[x][y] = boardValues[i];
                     x++;
                     if(x == 8){
                         x = 0;
@@ -42,8 +52,7 @@ class Client {
 
                 System.out.println("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
                 String move = null;
-                move = console.readLine();
-                //ENVOIE LE COUP ICI
+                move = AB.getBestCurrentMove(board,joueur);
 				output.write(move.getBytes(),0,move.length());
 				output.flush();
             }
@@ -61,7 +70,7 @@ class Client {
                 boardValues = s.split(" ");
                 int x=0,y=0;
                 for(int i=0; i<boardValues.length;i++){
-                    board[x][y] = Integer.parseInt(boardValues[i]);
+                    board[x][y] = boardValues[i];
                     x++;
                     if(x == 8){
                         x = 0;
@@ -84,8 +93,7 @@ class Client {
 				System.out.println("Dernier coup : "+ s);
 		       	System.out.println("Entrez votre coup : ");
 				String move = null;
-				//ENVOIE LE COUPS ICI
-				move = console.readLine();
+				move = AB.getBestCurrentMove(board,joueur);
 				output.write(move.getBytes(),0,move.length());
 				output.flush();
 				

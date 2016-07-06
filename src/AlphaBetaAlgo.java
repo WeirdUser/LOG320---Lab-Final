@@ -12,6 +12,11 @@ public class AlphaBetaAlgo {
     char[] lettres = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q',
             'R','S','T','U','V','W','X','Y','Z'};
 
+    // base constructor
+    public AlphaBetaAlgo(){
+
+    }
+
     public String getBestCurrentMove(String[][] board, String player){
         // function called by the AI to get the best possible move to make against the other Ai
         // at the current location and with the current information available
