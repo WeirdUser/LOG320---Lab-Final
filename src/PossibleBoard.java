@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class PossibleBoard {
@@ -12,12 +13,12 @@ public class PossibleBoard {
 	String player;
 	
 	// List of the possible moves from this board.
-	List<PossibleBoard> nextBoards;
+	List<PossibleBoard> nextBoards = new ArrayList<PossibleBoard>();
 	
 	// Board is the current board state, player is the token used by the player (2 or 4)
 	public PossibleBoard(String[][] board, String player){
-		
-		this.currentBoard = board;
+		//System.arraycopy(board, 0, this.currentBoard, 0, board.length);
+		this.currentBoard = copyBoard(board);
 		this.player = player;
 		
 	}
@@ -213,7 +214,7 @@ public class PossibleBoard {
 	private void addBoards(int x, int y, int movement, String mode){
 
 		//Used to model the next move, before adding it (or not) to the list of possible moves.
-		String[][] possibleMove = currentBoard;
+		String[][] possibleMove = copyBoard(currentBoard);
 		
 		//Used to mark if movement is possible
 		boolean canMove = true;
@@ -255,7 +256,7 @@ public class PossibleBoard {
 			}
 			
 			// Reset board before checking for other direction on same line.
-			possibleMove = currentBoard;
+			possibleMove = copyBoard(currentBoard);
 
 			// Checks to see if movement in the upward direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
@@ -324,7 +325,7 @@ public class PossibleBoard {
 			}
 
 			// Reset board before checking for other direction on same line.
-			possibleMove = currentBoard;
+			possibleMove = copyBoard(currentBoard);
 
 			// Checks to see if movement in the left direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
@@ -393,7 +394,7 @@ public class PossibleBoard {
 			}
 
 			// Reset board before checking for other direction on same line.
-			possibleMove = currentBoard;
+			possibleMove = copyBoard(currentBoard);
 
 			// Checks to see if movement in the up-left direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
@@ -462,7 +463,7 @@ public class PossibleBoard {
 			}
 
 			// Reset board before checking for other direction on same line.
-			possibleMove = currentBoard;
+			possibleMove = copyBoard(currentBoard);
 
 			// Checks to see if movement in the downward-left direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
@@ -498,6 +499,24 @@ public class PossibleBoard {
 			break;
 			
 		}
+		
+	}
+	
+	public String[][] copyBoard(String[][] boardToCopy){
+		
+		String[][] returnBoard = new String[8][8];
+		
+		for(int i = 0; i < boardToCopy.length; i++){
+			
+			for(int j = 0; j < boardToCopy[i].length; j++){
+				
+				returnBoard[i][j] = boardToCopy[i][j];
+				
+			}
+		
+		}
+		
+		return returnBoard;
 		
 	}
 	
