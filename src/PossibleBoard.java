@@ -8,9 +8,12 @@ public class PossibleBoard {
 	
 	// Current value of the board, used for prioritizing one board over another
 	int boardValue;
-	
+
 	// Current player's tokens (2 or 4)
 	String player;
+	
+	// Opponent's tokens (2 or 4)
+	String opponent;
 	
 	// List of the possible moves from this board.
 	List<PossibleBoard> nextBoards = new ArrayList<PossibleBoard>();
@@ -20,6 +23,13 @@ public class PossibleBoard {
 		//System.arraycopy(board, 0, this.currentBoard, 0, board.length);
 		this.currentBoard = copyBoard(board);
 		this.player = player;
+		
+		if(player.equals("2")){
+			this.opponent = "4";
+		}
+		else {
+			this.opponent = "2";
+		}
 		
 	}
 	
@@ -36,11 +46,11 @@ public class PossibleBoard {
 		int countDiagonal2 = 0;
 		
 		// For each individual piece on the board that belongs to the player
-		for(int j = 0; j < currentBoard.length; j++){
+		for(int j = 0; j < this.currentBoard.length; j++){
 				
-			for(int k = 0; k < currentBoard[j].length; k++){
+			for(int k = 0; k < this.currentBoard[j].length; k++){
 					
-				if(currentBoard[j][k].equals(this.player)){
+				if(this.currentBoard[j][k].equals(this.opponent)){
 
 					// Count the pieces in all four possible lines.
 					countVertical = this.countLine(j, k, "Vertical");
@@ -80,9 +90,9 @@ public class PossibleBoard {
 		case "Vertical" :
 			
 			// For each piece detected on the vertical line specified, the counter goes up by 1.
-			for(int i = 0; i < currentBoard[x].length; i++){
+			for(int i = 0; i < this.currentBoard[x].length; i++){
 				
-				if(!currentBoard[x][i].equals("0")){
+				if(!this.currentBoard[x][i].equals("0")){
 					
 					possibleMovement++;
 					
@@ -96,9 +106,9 @@ public class PossibleBoard {
 			
 
 			// For each piece detected on the horizontal line specified, the counter goes up by 1.
-			for(int i = 0; i < currentBoard.length; i++){
+			for(int i = 0; i < this.currentBoard.length; i++){
 				
-				if(!currentBoard[i][y].equals("0")){
+				if(!this.currentBoard[i][y].equals("0")){
 					
 					possibleMovement++;
 					
@@ -120,9 +130,9 @@ public class PossibleBoard {
 				diagonalPosition1 *= -1;
 
 				// For each piece detected on the diagonal line specified, the counter goes up by 1.
-				while(diagonalPosition1 < currentBoard.length){
+				while(diagonalPosition1 < this.currentBoard.length){
 					
-					if(!currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
+					if(!this.currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
 						
 						possibleMovement++;
 						
@@ -138,9 +148,9 @@ public class PossibleBoard {
 			else {
 
 				// For each piece detected on the diagonal line specified, the counter goes up by 1.
-				while(diagonalPosition1 < currentBoard[x].length){
+				while(diagonalPosition1 < this.currentBoard[x].length){
 					
-					if(!currentBoard[diagonalPosition1][diagonalPosition2].equals("0")){
+					if(!this.currentBoard[diagonalPosition1][diagonalPosition2].equals("0")){
 						
 						possibleMovement++;
 						
@@ -168,7 +178,7 @@ public class PossibleBoard {
 				// For each piece detected on the horizontal line specified, the counter goes up by 1.				
 				while(diagonalPosition1 >= 0){
 					
-					if(!currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
+					if(!this.currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
 						
 						possibleMovement++;
 						
@@ -187,9 +197,9 @@ public class PossibleBoard {
 				diagonalPosition1 = 7;
 
 				// For each piece detected on the horizontal line specified, the counter goes up by 1.
-				while(diagonalPosition2 < currentBoard.length){
+				while(diagonalPosition2 < this.currentBoard.length){
 					
-					if(!currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
+					if(!this.currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
 						
 						possibleMovement++;
 						
@@ -214,7 +224,7 @@ public class PossibleBoard {
 	private void addBoards(int x, int y, int movement, String mode){
 
 		//Used to model the next move, before adding it (or not) to the list of possible moves.
-		String[][] possibleMove = copyBoard(currentBoard);
+		String[][] possibleMove = copyBoard(this.currentBoard);
 		
 		//Used to mark if movement is possible
 		boolean canMove = true;
@@ -226,7 +236,7 @@ public class PossibleBoard {
 			
 			// Checks to see if movement in the downward direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(y + movement < 8 && !possibleMove[x][y + movement].equals(player)){
+			if(y + movement < 8 && !possibleMove[x][y + movement].equals(this.opponent)){
 					
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -234,7 +244,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x][y + i].equals(player) && !currentBoard[x][y + i].equals("0")){
+					if(!this.currentBoard[x][y + i].equals(this.opponent) && !this.currentBoard[x][y + i].equals("0")){
 						
 						canMove = false;
 						break;
@@ -248,19 +258,19 @@ public class PossibleBoard {
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x][y + movement] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x][y + movement] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
 			}
 			
 			// Reset board before checking for other direction on same line.
-			possibleMove = copyBoard(currentBoard);
+			possibleMove = copyBoard(this.currentBoard);
 
 			// Checks to see if movement in the upward direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(y - movement >= 0 && !possibleMove[x][y - movement].equals(player)){
+			if(y - movement >= 0 && !possibleMove[x][y - movement].equals(this.opponent)){
 
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -268,7 +278,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x][y - i].equals(player) && !currentBoard[x][y - i].equals("0")){
+					if(!this.currentBoard[x][y - i].equals(this.opponent) && !this.currentBoard[x][y - i].equals("0")){
 						
 						canMove = false;
 						break;
@@ -282,8 +292,8 @@ public class PossibleBoard {
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x][y - movement] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x][y - movement] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
@@ -295,7 +305,7 @@ public class PossibleBoard {
 
 			// Checks to see if movement in the right direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(x + movement < 8 && !possibleMove[x + movement][y].equals(player)){
+			if(x + movement < 8 && !possibleMove[x + movement][y].equals(this.opponent)){
 
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -303,7 +313,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x + i][y].equals(player) && !currentBoard[x + i][y].equalsIgnoreCase("0")){
+					if(!this.currentBoard[x + i][y].equals(this.opponent) && !this.currentBoard[x + i][y].equalsIgnoreCase("0")){
 						
 						canMove = false;
 						break;
@@ -317,19 +327,19 @@ public class PossibleBoard {
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x + movement][y] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x + movement][y] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
 			}
 
 			// Reset board before checking for other direction on same line.
-			possibleMove = copyBoard(currentBoard);
+			possibleMove = copyBoard(this.currentBoard);
 
 			// Checks to see if movement in the left direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(x - movement >= 0 && !possibleMove[x - movement][y].equals(player)){
+			if(x - movement >= 0 && !possibleMove[x - movement][y].equals(this.opponent)){
 
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -337,7 +347,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x - i][y].equals(player) && !currentBoard[x - i][y].equals("0")){
+					if(!this.currentBoard[x - i][y].equals(this.opponent) && !this.currentBoard[x - i][y].equals("0")){
 						
 						canMove = false;
 						break;
@@ -351,8 +361,8 @@ public class PossibleBoard {
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x - movement][y] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x - movement][y] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
@@ -364,7 +374,7 @@ public class PossibleBoard {
 
 			// Checks to see if movement in the downward-right direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(x + movement < 8 && y + movement < 8 && !possibleMove[x + movement][y + movement].equals(player)){
+			if(x + movement < 8 && y + movement < 8 && !possibleMove[x + movement][y + movement].equals(this.opponent)){
 
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -372,7 +382,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x + i][y + i].equals(player) && !currentBoard[x + i][y + i].equals("0")){
+					if(!this.currentBoard[x + i][y + i].equals(this.opponent) && !this.currentBoard[x + i][y + i].equals("0")){
 						
 						canMove = false;
 						break;
@@ -381,24 +391,24 @@ public class PossibleBoard {
 				
 				}
 
-				// If the move IS possible, it is done, and the new board state added
+				// If the move IS possible, it is done and the new board state added
 				// to the list of possible moves.
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x + movement][y + movement] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x + movement][y + movement] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
 			}
 
 			// Reset board before checking for other direction on same line.
-			possibleMove = copyBoard(currentBoard);
+			possibleMove = copyBoard(this.currentBoard);
 
 			// Checks to see if movement in the up-left direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(x - movement >= 0 && y - movement >= 0 && !possibleMove[x - movement][y - movement].equals(player)){
+			if(x - movement >= 0 && y - movement >= 0 && !possibleMove[x - movement][y - movement].equals(this.opponent)){
 
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -406,7 +416,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x - i][y - i].equals(player) && !currentBoard[x - i][y - i].equals("0")){
+					if(!this.currentBoard[x - i][y - i].equals(this.opponent) && !this.currentBoard[x - i][y - i].equals("0")){
 						
 						canMove = false;
 						break;
@@ -420,8 +430,8 @@ public class PossibleBoard {
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x - movement][y - movement] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x - movement][y - movement] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
@@ -433,7 +443,7 @@ public class PossibleBoard {
 
 			// Checks to see if movement in the up-right direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(x + movement < 8 && y - movement >= 0 && !possibleMove[x + movement][y - movement].equals(player)){
+			if(x + movement < 8 && y - movement >= 0 && !possibleMove[x + movement][y - movement].equals(this.opponent)){
 
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -441,7 +451,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x + i][y - i].equals(player) && !currentBoard[x + i][y - i].equals("0")){
+					if(!this.currentBoard[x + i][y - i].equals(this.opponent) && !this.currentBoard[x + i][y - i].equals("0")){
 						
 						canMove = false;
 						break;
@@ -455,19 +465,19 @@ public class PossibleBoard {
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x + movement][y - movement] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x + movement][y - movement] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
 			}
 
 			// Reset board before checking for other direction on same line.
-			possibleMove = copyBoard(currentBoard);
+			possibleMove = copyBoard(this.currentBoard);
 
 			// Checks to see if movement in the downward-left direction would go out of bounds
 			// and checks to see if the destination already contains one of the player's pieces.
-			if(x - movement >= 0 && y + movement < 8 && !possibleMove[x - movement][y + movement].equals(player)){
+			if(x - movement >= 0 && y + movement < 8 && !possibleMove[x - movement][y + movement].equals(this.opponent)){
 
 				// Checks every space in between the start and the destination, to see if there are
 				// no enemy pieces.
@@ -475,7 +485,7 @@ public class PossibleBoard {
 
 					// If there are enemy pieces in the way, the search is aborted, and the
 					// move is marked as impossible.
-					if(!currentBoard[x - i][y + i].equals(player) && !currentBoard[x - i][y + i].equals("0")){
+					if(!this.currentBoard[x - i][y + i].equals(this.opponent) && !this.currentBoard[x - i][y + i].equals("0")){
 						
 						canMove = false;
 						break;
@@ -489,8 +499,8 @@ public class PossibleBoard {
 				if(canMove){
 						
 					possibleMove[x][y] = "0";
-					possibleMove[x - movement][y + movement] = player;
-					nextBoards.add(new PossibleBoard(possibleMove, player));
+					possibleMove[x - movement][y + movement] = this.opponent;
+					this.nextBoards.add(new PossibleBoard(possibleMove, this.opponent));
 						
 				}
 				
@@ -502,6 +512,7 @@ public class PossibleBoard {
 		
 	}
 	
+	// Copies boards contents, and not just the reference.
 	public String[][] copyBoard(String[][] boardToCopy){
 		
 		String[][] returnBoard = new String[8][8];
