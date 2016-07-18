@@ -47,8 +47,8 @@ public class AlphaBetaAlgo {
         // get the actual move made in the best board and format it to send it back to the server
         for(int i = 0; i < board.length; ++i){
             for(int j = 0; j < board[i].length; ++j){
-                if(board[i][j] != bestBoard[i][j]){
-                    if(board[i][j] == "0"){
+                if(!board[i][j].equals(bestBoard[i][j])){
+                    if(board[i][j].equals("0")){
                         coord2 = lettres[j] + Integer.toString(i);
                     }
                     else {
@@ -63,7 +63,7 @@ public class AlphaBetaAlgo {
             return coord1 + " - " + coord2;
         }
         else{
-            return "1 - 1";
+            return "A2 - A2";
         }
 
     }
