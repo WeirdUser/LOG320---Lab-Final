@@ -14,7 +14,7 @@ class Client {
 	BufferedOutputStream output;
     String[][] board = new String[8][8];
 	try {
-		MyClient = new Socket("10.196.122.224", 8888);
+		MyClient = new Socket("localhost", 8888);
 	   	input    = new BufferedInputStream(MyClient.getInputStream());
 		output   = new BufferedOutputStream(MyClient.getOutputStream());
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
@@ -55,7 +55,7 @@ class Client {
 
                 System.out.println("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
                 String move = null;
-                move = AB.getBestCurrentMove(board,joueur);
+                move = AB.getBestCurrentMove(board,joueur, joueurEnnemy);
                 board = AB.updateBoard(board, move, joueur);
 				output.write(move.getBytes(),0,move.length());
 				output.flush();
@@ -98,7 +98,7 @@ class Client {
 				board = AB.updateBoard(board, s, joueurEnnemy);
 		       	System.out.println("Entrez votre coup : ");
 				String move = null;
-				move = AB.getBestCurrentMove(board,joueur);
+				move = AB.getBestCurrentMove(board,joueur, joueurEnnemy);
 				board = AB.updateBoard(board, move, joueur);
 				output.write(move.getBytes(),0,move.length());
 				output.flush();

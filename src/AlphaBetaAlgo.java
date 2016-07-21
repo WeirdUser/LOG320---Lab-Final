@@ -7,7 +7,7 @@ public class AlphaBetaAlgo {
 
     // instance used to find all the possibles boards
     PossibleBoard boards = null;
-
+    Evaluator eva = new Evaluator();
     // tableau alphabetiqur
     char[] lettres = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q',
             'R','S','T','U','V','W','X','Y','Z'};
@@ -17,14 +17,14 @@ public class AlphaBetaAlgo {
 
     }
 
-    public String getBestCurrentMove(String[][] board, String player){
+    public String getBestCurrentMove(String[][] board, String player, String enemy){
         // function called by the AI to get the best possible move to make against the other Ai
         // at the current location and with the current information available
 
         // priority
-        int highestPriority = -1;
+        Double highestPriority = (double) -1;
         // best board
-        String[][] bestBoard = null;
+        PossibleBoard bestBoard = null;
 
         // arrival position
         String coord1 = "";
@@ -33,21 +33,25 @@ public class AlphaBetaAlgo {
 
         // create the object and generate all the next possible boards
         boards = new PossibleBoard(board,player);
-        boards.generateNextBoards();
-
-        // pass in all the possible moves(boards) (up to a selected level of precision. here: 3)
-        for (PossibleBoard item : boards.nextBoards) {
-            int boardPriority = determineMovePriority(item);
-            if(boardPriority > highestPriority){
-                highestPriority = boardPriority;
-                bestBoard = item.currentBoard;
+        boards.generateNextBoards(player);
+        for(PossibleBoard pb:boards.nextBoards)
+        {
+        	pb.generateNextBoards(enemy);
+        	for(PossibleBoard pb2:pb.nextBoards)
+            {
+            	pb2.generateNextBoards(player);
+            	/*for(PossibleBoard pb3:pb2.nextBoards)
+            	{
+            		pb3.generateNextBoards(enemy);
+            	}*/
             }
         }
-
+        bestBoard = minimax(1, player, boards, true);
+        
         // get the actual move made in the best board and format it to send it back to the server
         for(int i = 0; i < board.length; ++i){
             for(int j = 0; j < board[i].length; ++j){
-                if(!board[i][j].equals(bestBoard[i][j])){
+                if(!board[i][j].equals(bestBoard.currentBoard[i][j])){
                     if(!board[i][j].equals(player)){
                         coord2 = lettres[j] + Integer.toString(getRow(i));
                     }
@@ -69,7 +73,144 @@ public class AlphaBetaAlgo {
 
     }
     
-    public String[][] updateBoard(String[][] board, String coup, String joueur){
+    private PossibleBoard minimax(int depth, String player, PossibleBoard topBoard, boolean isPlayer)
+    {
+    	String enemy = "0";
+    	if(player == "2")
+    	{
+    		enemy = "4";
+    	}
+    	else
+    	{
+    		enemy = "2";
+    	}
+    	
+    	Evaluator eva = new Evaluator();
+    	PossibleBoard bestBoard = new PossibleBoard(topBoard.currentBoard, "");
+    	int bestValue;
+    	int currentValue;
+    	
+    	//PossibleBoard currentValue;
+    	
+    	if(isPlayer == true)
+    	{
+    		bestBoard.boardValue = Integer.MIN_VALUE;
+    	}
+    	else
+    	{
+    		bestBoard.boardValue = Integer.MAX_VALUE;
+    	}
+    	
+    	
+    	
+    	if(topBoard.nextBoards.isEmpty() || depth == 0)
+    	{
+    		bestBoard = topBoard;
+    		bestBoard.boardValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
+    		//bestValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
+    	}
+    	else
+    	{
+    		for(PossibleBoard nextMove:topBoard.nextBoards)
+    		{
+    			if(isPlayer)
+    			{
+    				PossibleBoard reply = minimax(depth - 1, enemy, nextMove, !isPlayer);
+    				if(reply.boardValue > bestBoard.boardValue)
+    				{
+    					//bestValue = reply.boardValue;
+    					bestBoard = reply;
+    				}
+    			}
+    			else
+    			{
+    				PossibleBoard reply = minimax(depth - 1, player, nextMove, !isPlayer);
+    				if(reply.boardValue < bestBoard.boardValue)
+    				{
+    					//bestValue = reply.boardValue;
+    					bestBoard = reply;
+    				}
+    			}
+    		}    			
+    	}
+    	/*PossibleBoard reply = new PossibleBoard(null,null);
+    	reply.boardValue = bestBoard.boardValue;*/
+		return bestBoard;
+    }
+    
+    /*private PossibleBoard chooseMove(PossibleBoard topBoard, String player, Double alpha, Double beta, int depth, int maxDepth, boolean isPlayer) {
+    	
+    	//PossibleBoard bestBoard = new PossibleBoard(topBoard.currentBoard, player);,
+    	String[][] bestGrid = null;
+    	if(topBoard.nextBoards.isEmpty() || depth == maxDepth)
+    	{
+    		
+    		PossibleBoard newBoard = new PossibleBoard(topBoard.currentBoard, player);
+    		newBoard.boardValue = eva.evaluate(newBoard, player);
+    		return newBoard;
+    	}
+    	if(isPlayer)
+    	{
+    		PossibleBoard reply = null;
+    		for(PossibleBoard board : topBoard.nextBoards)
+        	{
+    			
+    			if(player.equals("4"))
+    			{
+    				reply = chooseMove(board, "2", alpha, beta, depth + 1, maxDepth, !isPlayer);
+    			}
+    			else
+    			{
+    				reply = chooseMove(board, "4", alpha, beta, depth + 1, maxDepth, !isPlayer);
+    			}
+    			
+        		if(reply.boardValue > alpha)
+        		{
+        			alpha = (Double) reply.boardValue;
+        			bestGrid = reply.currentBoard;
+        		}
+        		if(alpha > beta) break;
+        	}
+    		//return reply;
+    	}
+    	else
+    	{
+    		PossibleBoard reply = null;
+    		for(PossibleBoard board : topBoard.nextBoards)
+        	{
+    			
+    			if(player.equals("4"))
+    			{
+    				reply = chooseMove(board, "4", alpha, beta, depth + 1, maxDepth, isPlayer);
+    			}
+    			else
+    			{
+    				reply = chooseMove(board, "2", alpha, beta, depth + 1, maxDepth, isPlayer);
+    			}
+    			
+        		if(reply.boardValue < beta)
+        		{
+        			beta = (Double) reply.boardValue;
+        			bestGrid = reply.currentBoard;
+        		}
+        		if(alpha >= beta) break;
+        	}
+    		//return reply;
+    	}
+    	PossibleBoard newBoard = new PossibleBoard(bestGrid, null);
+    	if(isPlayer)
+    	{
+    		newBoard.boardValue = alpha;
+    	}
+    	else
+    	{
+    		newBoard.boardValue = beta;
+    	}
+		//newBoard.boardValue = eva.evaluate(topBoard, player);
+		return newBoard;
+	}*/
+
+	public String[][] updateBoard(String[][] board, String coup, String joueur){
     	
     	char[] move = coup.toCharArray();
    
