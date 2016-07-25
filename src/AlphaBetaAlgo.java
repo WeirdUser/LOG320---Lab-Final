@@ -103,7 +103,7 @@ public class AlphaBetaAlgo {
 			}
 			else
 			{
-				bestBoard.beta = eva.evaluate(bestBoard, enemy)
+				bestBoard.beta = eva.evaluate(bestBoard, enemy);
 			}
     		//bestBoard.boardValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
     		//bestValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
