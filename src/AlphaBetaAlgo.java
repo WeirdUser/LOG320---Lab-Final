@@ -91,22 +91,21 @@ public class AlphaBetaAlgo {
     	int currentValue;
     	
     	//PossibleBoard currentValue;
-    	
-    	if(isPlayer == true)
-    	{
-    		bestBoard.boardValue = Integer.MIN_VALUE;
-    	}
-    	else
-    	{
-    		bestBoard.boardValue = Integer.MAX_VALUE;
-    	}
-    	
-    	
-    	
+
+		bestBoard.alpha = Integer.MIN_VALUE;
+		bestBoard.beta = Integer.MAX_VALUE;
+
     	if(topBoard.nextBoards.isEmpty() || depth == 0)
     	{
     		bestBoard = topBoard;
-    		bestBoard.boardValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
+			if(isPlayer == true){
+				bestBoard.alpha = eva.evaluate(bestBoard, player);
+			}
+			else
+			{
+				bestBoard.beta = eva.evaluate(bestBoard, enemy)
+			}
+    		//bestBoard.boardValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
     		//bestValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
     	}
     	else
@@ -116,7 +115,7 @@ public class AlphaBetaAlgo {
     			if(isPlayer)
     			{
     				PossibleBoard reply = minimax(depth - 1, enemy, nextMove, !isPlayer);
-    				if(reply.boardValue > bestBoard.boardValue)
+    				if(reply.alpha > bestBoard.alpha)
     				{
     					//bestValue = reply.boardValue;
     					bestBoard = reply;
@@ -125,12 +124,14 @@ public class AlphaBetaAlgo {
     			else
     			{
     				PossibleBoard reply = minimax(depth - 1, player, nextMove, !isPlayer);
-    				if(reply.boardValue < bestBoard.boardValue)
+    				if(reply.beta < bestBoard.beta)
     				{
     					//bestValue = reply.boardValue;
     					bestBoard = reply;
     				}
     			}
+
+				if (bestBoard.alpha >= bestBoard.beta) break;
     		}    			
     	}
     	/*PossibleBoard reply = new PossibleBoard(null,null);

@@ -8,6 +8,9 @@ public class PossibleBoard {
 	
 	// Current value of the board, used for prioritizing one board over another
 	int boardValue = 0;
+
+	int alpha = 0;
+	int beta = 0;
 	
 	// Current player's tokens (2 or 4)
 	String player;
