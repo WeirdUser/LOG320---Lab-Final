@@ -100,10 +100,16 @@ public class AlphaBetaAlgo {
     	if(topBoard.nextBoards.isEmpty() || depth == 0)
     	{
     		bestBoard = topBoard;
-    		bestBoard.boardValue = eva.Evaluate(bestBoard);
-			
-			return bestBoard;
-    		
+
+			if(isPlayer == true){
+				bestBoard.alpha = eva.evaluate(bestBoard, player);
+			}
+			else
+			{
+				bestBoard.beta = eva.evaluate(bestBoard, enemy);
+			}
+    		//bestBoard.boardValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
+    		//bestValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
     	}
     	else
     	{
