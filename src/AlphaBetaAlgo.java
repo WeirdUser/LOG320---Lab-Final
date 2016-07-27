@@ -4,7 +4,7 @@
 public class AlphaBetaAlgo {
 
     char precisionLvl = 3;
-
+    int turn = 0;
     // instance used to find all the possibles boards
     PossibleBoard boards = null;
     Evaluator eva = new Evaluator();
@@ -22,7 +22,7 @@ public class AlphaBetaAlgo {
         // at the current location and with the current information available
 
         // priority
-        Double highestPriority = (double) -1;
+       
         // best board
         PossibleBoard bestBoard = null;
 
@@ -46,7 +46,10 @@ public class AlphaBetaAlgo {
             	}*/
             }
         }
-        bestBoard = minimax(1, player, boards, true);
+        
+        
+        
+        bestBoard = minimax(1, player, boards, Integer.MIN_VALUE,Integer.MAX_VALUE, true);
         
         // get the actual move made in the best board and format it to send it back to the server
         for(int i = 0; i < board.length; ++i){
@@ -73,7 +76,7 @@ public class AlphaBetaAlgo {
 
     }
     
-    private PossibleBoard minimax(int depth, String player, PossibleBoard topBoard, boolean isPlayer)
+    private PossibleBoard minimax(int depth, String player, PossibleBoard topBoard, int alpha, int beta, boolean isPlayer)
     {
     	String enemy = "0";
     	if(player == "2")
@@ -92,21 +95,15 @@ public class AlphaBetaAlgo {
     	
     	//PossibleBoard currentValue;
 
-		bestBoard.alpha = Integer.MIN_VALUE;
-		bestBoard.beta = Integer.MAX_VALUE;
+		
 
     	if(topBoard.nextBoards.isEmpty() || depth == 0)
     	{
     		bestBoard = topBoard;
-			if(isPlayer == true){
-				bestBoard.alpha = eva.evaluate(bestBoard, player);
-			}
-			else
-			{
-				bestBoard.beta = eva.evaluate(bestBoard, enemy)
-			}
-    		//bestBoard.boardValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
-    		//bestValue = (isPlayer == true) ? eva.evaluate(bestBoard, player) : eva.evaluate(bestBoard, enemy);
+    		bestBoard.boardValue = eva.Evaluate(bestBoard);
+			
+			return bestBoard;
+    		
     	}
     	else
     	{
@@ -114,28 +111,39 @@ public class AlphaBetaAlgo {
     		{
     			if(isPlayer)
     			{
-    				PossibleBoard reply = minimax(depth - 1, enemy, nextMove, !isPlayer);
-    				if(reply.alpha > bestBoard.alpha)
+    				PossibleBoard reply = minimax(depth - 1, enemy, nextMove, alpha, beta, !isPlayer );
+    				if(reply.boardValue > alpha)
     				{
+    					alpha = reply.boardValue;
     					//bestValue = reply.boardValue;
     					bestBoard = reply;
     				}
     			}
     			else
     			{
-    				PossibleBoard reply = minimax(depth - 1, player, nextMove, !isPlayer);
-    				if(reply.beta < bestBoard.beta)
+    				PossibleBoard reply = minimax(depth - 1, player, nextMove,alpha, beta, !isPlayer );
+    				if(reply.boardValue < beta)
     				{
+    					beta = reply.boardValue;
     					//bestValue = reply.boardValue;
     					bestBoard = reply;
     				}
     			}
 
-				if (bestBoard.alpha >= bestBoard.beta) break;
+				if (alpha >= beta) break;
     		}    			
     	}
     	/*PossibleBoard reply = new PossibleBoard(null,null);
     	reply.boardValue = bestBoard.boardValue;*/
+    	if(isPlayer)
+    	{
+    		bestBoard.boardValue = alpha;
+    	}
+    	else
+    	{
+    		bestBoard.boardValue = beta;
+    	}
+    	
 		return bestBoard;
     }
     
