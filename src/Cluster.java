@@ -29,7 +29,7 @@ public class Cluster {
 	public void mergeCluster(Cluster newCluster){
 		
 		this.nbPieces += newCluster.nbPieces;
-		
+		currentIntervals.addAll(newCluster.currentIntervals);
 	}
 	
 }
