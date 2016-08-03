@@ -3,6 +3,8 @@ import java.util.List;
 
 public class PossibleBoard {
 
+	// Members
+
 	// Holds the current board's state
 	String[][] currentBoard;
 	
@@ -58,18 +60,16 @@ public class PossibleBoard {
 					this.addBoards(j, k, countHorizontal, "Horizontal");
 					this.addBoards(j, k, countDiagonal1, "Diagonal1");
 					this.addBoards(j, k, countDiagonal2, "Diagonal2");
-						
 				}
-				
 			}
-				
 		}
-			
 	}
 	
 	// Count the number of pieces vertically, horizontally or in both diagonals.
 	private int countLine(int x, int y, String direction){
-		
+
+		// Members
+
 		// Counter for the number of pieces.
 		int possibleMovement = 0;
 		
@@ -90,9 +90,7 @@ public class PossibleBoard {
 				if(!currentBoard[x][i].equals("0")){
 					
 					possibleMovement++;
-					
 				}
-				
 			}
 			
 			break;
@@ -106,9 +104,7 @@ public class PossibleBoard {
 				if(!currentBoard[i][y].equals("0")){
 					
 					possibleMovement++;
-					
 				}
-				
 			}
 			
 			break;
@@ -130,7 +126,6 @@ public class PossibleBoard {
 					if(!currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
 						
 						possibleMovement++;
-						
 					}
 
 					// Move down-right 1.
@@ -138,7 +133,6 @@ public class PossibleBoard {
 					diagonalPosition2++;
 					
 				}
-				
 			} 
 			else {
 
@@ -148,15 +142,12 @@ public class PossibleBoard {
 					if(!currentBoard[diagonalPosition1][diagonalPosition2].equals("0")){
 						
 						possibleMovement++;
-						
 					}
 
 					// Move down-right 1.
 					diagonalPosition1++;
 					diagonalPosition2++;
-					
 				}
-				
 			}
 			
 			break;
@@ -176,15 +167,12 @@ public class PossibleBoard {
 					if(!currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
 						
 						possibleMovement++;
-						
 					}
 
 					// Move up-right 1.
 					diagonalPosition1--;
 					diagonalPosition2++;
-					
 				}
-				
 			} 
 			else {
 				
@@ -197,26 +185,24 @@ public class PossibleBoard {
 					if(!currentBoard[diagonalPosition2][diagonalPosition1].equals("0")){
 						
 						possibleMovement++;
-						
 					}
 
 					// Move up-right 1.
 					diagonalPosition1--;
 					diagonalPosition2++;
-					
 				}
-				
 			}
 			
 			break;
-		
 		}
 		
 		return possibleMovement;
-		
 	}
-		
+
+	// Function used to add a move
 	private void addBoards(int x, int y, int movement, String mode){
+
+		// Members
 
 		//Used to model the next move, before adding it (or not) to the list of possible moves.
 		String[][] possibleMove = copyBoard(currentBoard);
@@ -243,9 +229,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 					
 				// If the move IS possible, it is done, and the new board state added
@@ -255,11 +239,8 @@ public class PossibleBoard {
 					possibleMove[x][y] = "0";
 					possibleMove[x][y + movement] = player;
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
-					//newMove.evaluateDistance(x, y + movement, movement,"Vertical");
 					nextBoards.add(newMove);
-						
 				}
-				
 			}
 			
 			// Reset board before checking for other direction on same line.
@@ -279,9 +260,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 
 				// If the move IS possible, it is done, and the new board state added
@@ -291,11 +270,8 @@ public class PossibleBoard {
 					possibleMove[x][y] = "0";
 					possibleMove[x][y - movement] = player;
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
-					//newMove.evaluateDistance(x, y - movement, movement,"Vertical");
 					nextBoards.add(newMove);
-						
 				}
-				
 			}
 			
 			break;
@@ -316,9 +292,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 
 				// If the move IS possible, it is done, and the new board state added
@@ -330,9 +304,8 @@ public class PossibleBoard {
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
 					//newMove.evaluateDistance(x + movement, y, movement,"Horizontal");
 					nextBoards.add(newMove);
-						
+
 				}
-				
 			}
 
 			// Reset board before checking for other direction on same line.
@@ -352,9 +325,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 
 				// If the move IS possible, it is done, and the new board state added
@@ -366,9 +337,8 @@ public class PossibleBoard {
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
 					//newMove.evaluateDistance(x - movement, y, movement, "Horizontal");
 					nextBoards.add(newMove);
-						
+
 				}
-				
 			}
 			
 			break;
@@ -389,9 +359,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 
 				// If the move IS possible, it is done, and the new board state added
@@ -401,11 +369,8 @@ public class PossibleBoard {
 					possibleMove[x][y] = "0";
 					possibleMove[x + movement][y + movement] = player;
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
-					//newMove.evaluateDistance(x + movement, y, movement,"Diagonal1");
 					nextBoards.add(newMove);
-						
 				}
-				
 			}
 
 			// Reset board before checking for other direction on same line.
@@ -425,9 +390,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 
 				// If the move IS possible, it is done, and the new board state added
@@ -437,11 +400,8 @@ public class PossibleBoard {
 					possibleMove[x][y] = "0";
 					possibleMove[x - movement][y - movement] = player;
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
-					//newMove.evaluateDistance(x - movement, y - movement, movement, "Diagonal1");
 					nextBoards.add(newMove);
-						
 				}
-				
 			}
 			
 			break;
@@ -462,9 +422,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 
 				// If the move IS possible, it is done, and the new board state added
@@ -474,11 +432,8 @@ public class PossibleBoard {
 					possibleMove[x][y] = "0";
 					possibleMove[x + movement][y - movement] = player;
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
-					//newMove.evaluateDistance(x + movement, y - movement, movement, "Diagonal2");
 					nextBoards.add(newMove);
-						
 				}
-				
 			}
 
 			// Reset board before checking for other direction on same line.
@@ -498,9 +453,7 @@ public class PossibleBoard {
 						
 						canMove = false;
 						break;
-						
 					}
-				
 				}
 
 				// If the move IS possible, it is done, and the new board state added
@@ -510,21 +463,15 @@ public class PossibleBoard {
 					possibleMove[x][y] = "0";
 					possibleMove[x - movement][y + movement] = player;
 					PossibleBoard newMove = new PossibleBoard(possibleMove, player);
-					//newMove.evaluateDistance(x - movement, y + movement, movement, "Diagonal2");
 					nextBoards.add(newMove);
-						
 				}
-				
 			}
 		
 			break;
-			
 		}
-		
 	}
-	
-	
 
+	// Function used to copy a board
 	public String[][] copyBoard(String[][] boardToCopy){
 		
 		String[][] returnBoard = new String[8][8];
@@ -534,13 +481,9 @@ public class PossibleBoard {
 			for(int j = 0; j < boardToCopy[i].length; j++){
 				
 				returnBoard[i][j] = boardToCopy[i][j];
-				
 			}
-		
 		}
 		
 		return returnBoard;
-		
 	}
-	
 }
